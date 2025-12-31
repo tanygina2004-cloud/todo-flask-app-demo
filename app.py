@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import logging
 
@@ -13,6 +14,10 @@ from db import (
 app = Flask(__name__)
 
 # Default DB for normal app run
+# Authentication can be added later if needed
+# Session management can also be implemented as needed
+# JWT tokens can be integrated for secure API access
+
 app.config["DB_NAME"] = "tasks.db"
 
 logging.basicConfig(
@@ -23,16 +28,16 @@ logging.basicConfig(
 
 # ------------------------
 # Health Check
-# ------------------------
-@app.route("/")
-def health_check():
-    return {"status": "OK"}
+# # ------------------------
+# @app.route("/")
+# def health_check():
+#     return {"status": "OK"}
 
 
 # ------------------------
 # TEMPLATE ROUTES
 # ------------------------
-@app.route("/tasks", methods=["GET"])
+@app.route("/", methods=["GET"])
 def tasks_page():
     try:
         tasks = get_all_tasks(app.config["DB_NAME"])
@@ -77,31 +82,32 @@ def add_task_page():
 # ------------------------
 @app.route("/api/tasks", methods=["POST"])
 def create_task_api():
-    try:
-        data = request.get_json()
+    if request.method == "POST":
+        try:
+            data = request.get_json()
 
-        title = data.get("title")
-        description = data.get("description", "")
-        due_date = data.get("due_date")
-        status = data.get("status", "pending")
+            title = data.get("title")
+            description = data.get("description", "")
+            due_date = data.get("due_date")
+            status = data.get("status", "pending")
 
-        if not title or not due_date:
-            return jsonify({"error": "Title and due_date are required"}), 400
+            if not title or not due_date:
+                return jsonify({"error": "Title and due_date are required"}), 400
 
-        create_task(
-            title,
-            description,
-            due_date,
-            status,
-            app.config["DB_NAME"],
-        )
+            create_task(
+                title,
+                description,
+                due_date,
+                status,
+                app.config["DB_NAME"],
+            )
 
-        logging.info("Task created successfully")
-        return jsonify({"message": "Task created"}), 201
+            logging.info("Task created successfully")
+            return jsonify({"message": "Task created"}), 201
 
-    except Exception as e:
-        logging.error(f"Error creating task: {e}")
-        return jsonify({"error": "Internal server error"}), 500
+        except Exception as e:
+            logging.error(f"Error creating task: {e}")
+            return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route("/api/tasks", methods=["GET"])
