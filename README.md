@@ -56,7 +56,7 @@ python app.py
 
 Running `app.py` directly will call `init_db()` and start the Flask development server.
 
-Open http://127.0.0.1:5000/tasks to view the app UI.
+Open http://127.0.0.1:5000 to view the app UI.
 
 ## Configuration
 
@@ -164,18 +164,3 @@ The application uses the standard `logging` module (`app.py`) to emit informatio
 - `schema.sql` — DB schema
 - `templates/tasks.html`, `templates/add_task.html` — UI
 - `tests/test_task.py` — example API tests
-
-## Contributing
-
-If you'd like to extend this project, consider:
-
-- Adding JavaScript to call the API from the UI for active Complete/Delete actions
-- Adding pagination, filtering, or search for tasks
-- Replacing raw SQL with an ORM for more complex use-cases
-- Adding CI with GitHub Actions to run `pytest`
-
-If you want, I can also add example JavaScript to the templates or create a simple Postman collection.
-
----
-
-If you want further edits (more examples, CI config, badges, or screenshots), tell me what to add next.
